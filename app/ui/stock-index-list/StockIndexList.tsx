@@ -13,7 +13,7 @@ export default function StockIndexList({ symbols, handleOnItemClick }: { symbols
 
 	const { setMainPage } = useMainUi();
 
-	console.log("=========== stockPriceList");
+	console.log("=========== StockIndexList");
 console.log(symbols);
 	const { stockPriceList, isLoading } = useStockData(symbols);
 
@@ -23,7 +23,7 @@ console.log(symbols);
 	// }
 
 	if (isLoading) return <Loading />
-	console.log("---- stockPriceList");
+	console.log("---- priceList");
 console.log(stockPriceList);
 	return (
 		<div className="p-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">

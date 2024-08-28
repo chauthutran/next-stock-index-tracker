@@ -14,15 +14,6 @@ const fetcher = (symbols: string[]) => axios.get(`/api/stock-index`, {
 		symbols: symbols.join(",")
 	},
 }).then(res => res);
-// const fetcher = (symbols: string[]) =>  axios.get(`/api/yahoo-finance2`, {
-// 	params: {
-// 		moduleName: "quote",
-// 		args: [symbols.join(","), { fields: [ "region", "quoteType", "typeDisp", "currency", "regularMarketChange", "regularMarketTime", "symbol", "longName", "dividendYield", "regularMarketDayHigh", "regularMarketDayRange", "regularMarketDayLow", "regularMarketVolume", "regularMarketPreviousClose", "fullExchangeName", "regularMarketOpen", "fiftyTwoWeekLowChange", "fiftyTwoWeekLowChangePercent", "fiftyTwoWeekRange", "fiftyTwoWeekHighChange", "fiftyTwoWeekHighChangePercent", "fiftyTwoWeekLow", "fiftyTwoWeekHigh", "fiftyTwoWeekChangePercent", "fiftyDayAverage", "fiftyDayAverageChange", "fiftyDayAverageChangePercent", "twoHundredDayAverage", "twoHundredDayAverageChange", "twoHundredDayAverageChangePercent", "sourceInterval", "exchangeDataDelayedBy", "marketState", "regularMarketChangePercent", "regularMarketPrice", "exchange", "shortName", "longName", "messageBoardId", "exchangeTimezoneName", "exchangeTimezoneShortName", "gmtOffSetMilliseconds", "market", "esgPopulated", "tradeable", "cryptoTradeable", "symbol" 
-// 		]}]
-// 	},
-// }).then(res => res);
-
-
 
 const useStockData = (symbols: string[]) => {
 	const {data, mutate, error, isValidating} = useSWR(symbols, fetcher, {
@@ -45,8 +36,8 @@ const useStockData = (symbols: string[]) => {
 	}
 	
 	useEffect(() => {
-		//  // Fetch data immediately
-		//  mutate();
+		 // Fetch data immediately
+		 mutate();
 		
 		// // Return a cleanup function to stop revalidation by calling mutate 
 		return () => {
