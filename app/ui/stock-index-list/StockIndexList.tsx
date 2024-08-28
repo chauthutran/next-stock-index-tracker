@@ -13,14 +13,8 @@ export default function StockIndexList({ symbols, handleOnItemClick }: { symbols
 
 	const { stockPriceList, isLoading } = useStockData(symbols);
 
-	// const itemOnClick = (item: JSONObject) => {
-	// 	setMainPage(Constant.UI_SYMBOL_DETAILS);
-	// 	handleOnItemClick(item);
-	// }
-
 	if (isLoading) return <Loading />
-	console.log("---- priceList");
-console.log(stockPriceList);
+	
 	return (
 		<div className="p-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
 			{stockPriceList.map((stock: JSONObject) => {

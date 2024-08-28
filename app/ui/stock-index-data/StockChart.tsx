@@ -1,13 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, ComposedChart, Bar } from 'recharts';
-import axios from 'axios';
+import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, ComposedChart, Bar } from 'recharts';
 import { JSONObject } from '@/lib/definations';
 import * as Utils from "@/lib/utils";
 import ChartDateRange from './ChartDateRange';
 import { format, parseISO } from 'date-fns';
-import { TooltipProps } from 'recharts';
 import fetchStockChartData from '@/lib/utils/fetchStockChartData';
 
 const CustomTooltip = ({payload, label}: any) => {
@@ -60,21 +58,12 @@ export default function StockChart({ symbol }: { symbol: string }) {
 
 	const fetchData = async() => {
 		const data = await fetchStockChartData(symbol, dateRangeName);
-		console.log("------------- Chart data");
-console.log(data);
-		// if( data !== undefined ) {
-				setChartData(data.quotes);
-			// }
-			// else {
-			// 	// errMsg = "Error while fetching stock data.";
-			// }
-		// }
-	
+		setChartData(data.quotes);
 	}
 
-	useEffect(() => {
-		fetchData();
-	}, []);
+	// useEffect(() => {
+	// 	fetchData();
+	// }, []);
 
 	useEffect(() => {
 		fetchData();
@@ -96,7 +85,8 @@ console.log(data);
 			const minTick = Math.ceil(tempTicks[0]);
 			const maxTick = Math.round(tempTicks[tempTicks.length - 1]);
 
-			const step = Math.round((maxTick - minTick) / 10);
+			const interval = maxTick - minTick;
+			const step = (interval < 50 ) ? 1 : Math.round((maxTick - minTick) / 10);
 			for (var i = minTick; i <= maxTick; i += step) {
 				ticks.push(i.toFixed(2));
 			}
@@ -170,10 +160,7 @@ console.log(data);
 
 					<Tooltip content={<CustomTooltip />} />
 
-					{/* <Area type="monotone"  dataKey="low"  />
-					 <Area type="monotone" dataKey="high" />
-					 <Area type="monotone" dataKey="open" /> */}
-					<Bar yAxisId="yVolume" dataKey="volume" barSize={20} fill="#ABB2B9" />
+					<Bar yAxisId="yVolume" dataKey="volume" barSize={20} fill="#11B2B9" />
 					<Area yAxisId="yPrice" type="monotone" dataKey="close" strokeWidth={1} activeDot={{ r: 8 }} dot={false} fill="url(#colorUv)" />
 				</ComposedChart>
 			</ResponsiveContainer>

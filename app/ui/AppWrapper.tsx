@@ -20,7 +20,7 @@ import UserSettingPage from './userSetting/UserSettingPage';
 export default function AppWrapper() {
 
 	const {mainPage} = useMainUi();
-console.log(mainPage);
+	
 	return (
 		<div className="text-textPrimary">
 		
