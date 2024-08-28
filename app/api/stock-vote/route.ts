@@ -39,17 +39,12 @@ export async function POST(request: NextRequest) {
 
 		await connectToDatabase();
 
-console.log("============ stockVote POST");
-		
-console.log(userId);
 		const updateField = voteType === 'upvote' ? 'upvotes' : 'downvotes';
 		const oppositeField = voteType === 'upvote' ? 'downvotes' : 'upvotes';
 
 		// Find the stock vote document
 		const stockVote = await StockVote.findOne({ symbol });
 
-console.log("============ stockVote");
-console.log(stockVote);
 		if (!stockVote) { // Add new
 		   // Find the document and update it or insert if it does not exist
 		   const addedVote = await StockVote.findOneAndUpdate(

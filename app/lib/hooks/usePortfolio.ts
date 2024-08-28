@@ -9,15 +9,37 @@ import { fetchIndividualData } from '../utils/fetchStockIndexes';
 import { useEffect } from 'react';
 
 
-const fetcher = (userId: string) => axios.get(`/api/portfolio?userId=${userId}`).then(res => res);
+const fetcher = async(userId: string) => {
+	try {
+	  const response = await axios.get(`/api/portfolio`, {
+		params: {
+			userId: userId,
+		},
+	  });
+  
+	  // Check if the response data is valid
+	  if (response && response.data) {
+		return response.data;
+	  } else {
+		throw new Error("Received empty or invalid data from the API");
+	  }
+	} catch (error) {
+	  console.error("Error fetching data:", error);
+	  throw error; // Rethrow the error to be handled by SWR
+	}
+};
+
 
 const usePortfolio  = (userId: string) => {
-	const {data, mutate, error, isValidating} = useSWR(userId, fetcher, {
-		// refreshInterval: 5 * 1000, //  Fetch data every 5 seconds
-		refreshInterval: 5 * 60 * 60 * 1000, // Fetch data every 5 minutes
-		revalidateOnFocus: true,
-		revalidateOnReconnect: true,
-	});
+	const { data, mutate, error, isValidating } = useSWR(
+		`/api/portfolio?userId=${userId}`,
+		() => fetcher(userId),
+		{
+		  refreshInterval: 5 * 60 * 60 * 1000, // Fetch data every 5 hours
+		  revalidateOnFocus: true,
+		  revalidateOnReconnect: true,
+		}
+	  );
 
 
 	let portfolioList: JSONObject[] = [];
@@ -47,7 +69,7 @@ const usePortfolio  = (userId: string) => {
 	  }, [mutate]);
 	
 	return {
-		portfolioList: portfolioList,
+		portfolioList: data,
 		errMsg: errMsg,
 		isLoading: !error && isValidating,
 		dateTimeStamp: new Date().getTime()

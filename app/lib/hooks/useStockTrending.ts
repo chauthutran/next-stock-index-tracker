@@ -7,9 +7,6 @@ import axios from 'axios';
 import { useEffect } from 'react';
 
 
-// const fetcher = () => axios.get("/api/stock-trending").then(res => res);
-
-
 const fetcher = async () => {
 	try {
 	  const response = await axios.get(`/api/stock-trending`);
@@ -28,12 +25,6 @@ const fetcher = async () => {
   
 
 const useStockTrending = () => {
-	// const {data, mutate, error, isValidating} = useSWR({}, fetcher, {
-	// 	// refreshInterval: 5 * 1000, //  Fetch data every 5 seconds
-	// 	refreshInterval: 5 * 60 * 60 * 1000, // Fetch data every 5 minutes
-	// 	revalidateOnFocus: true,
-	// 	revalidateOnReconnect: true,
-	// });
 
 	const { data, mutate, error, isValidating } = useSWR(
 		`/api/stock-trending`,
@@ -43,25 +34,12 @@ const useStockTrending = () => {
 		  revalidateOnFocus: true,
 		  revalidateOnReconnect: true,
 		}
-	  );
-
-
+	);
 
 
 	if (error) {
 		console.error("Error in useStockTrending:", error);
-	  }
-
-	// let stockTrending: JSONObject[] = [];
-	// let errMsg = "";
-	// if( data !== undefined ) {
-	// 	if( data.statusText !== "OK" ) {
-	// 		errMsg = "Error while fetching stock data.";
-	// 	}
-	// 	else {
-	// 		stockTrending = Utils.cloneJSONObject(data.data);
-	// 	}
-	// }
+	}
 	
 	useEffect(() => {
 		// // Fetch data immediately

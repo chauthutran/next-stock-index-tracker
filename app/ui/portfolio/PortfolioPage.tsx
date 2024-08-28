@@ -1,14 +1,8 @@
 // components/Portfolio.tsx
 import { useState, useEffect, useRef } from 'react';
-import useSWR from 'swr';
-import axios from 'axios';
-import { useAuth } from '@/contexts/AuthContext';
-import usePortfolio from '@/lib/hooks/updatePortfolio';
 import { FiPlus } from 'react-icons/fi';
 import PortfolioAddForm from './PortfolioAddForm';
 import { JSONObject } from '@/lib/definations';
-import * as Utils from "@/lib/utils";
-import { useQuery } from 'react-query';
 import PortfolioList from './PortfolioList';
 import Modal from '../layout/Modal';
 

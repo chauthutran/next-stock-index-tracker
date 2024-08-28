@@ -9,13 +9,6 @@ import { fetchIndividualData } from '../utils/fetchStockIndexes';
 import { useEffect } from 'react';
 
 
-// const fetcher = (symbols: string[]) => axios.get(`/api/stock-index`, {
-// 	params: {
-// 		symbols: symbols.join(",")
-// 	},
-// }).then(res => res.data);
-
-
 const fetcher = async (symbols: string[]) => {
 	try {
 	  const response = await axios.get(`/api/stock-index`, {
@@ -34,8 +27,8 @@ const fetcher = async (symbols: string[]) => {
 	  console.error("Error fetching data:", error);
 	  throw error; // Rethrow the error to be handled by SWR
 	}
-  };
-  
+};
+
 
 const useStockData = (symbols: string[]) => {
 
@@ -54,16 +47,6 @@ const useStockData = (symbols: string[]) => {
 		console.error("Error in useStockData:", error);
 	  }
 
-	// let stockPriceList: JSONObject[] = [];
-	// let errMsg = "";
-	// if( data !== undefined || data !== null ) {
-	// 	// if( data.statusText !== "OK" ) {
-	// 	// 	errMsg = "Error while fetching stock data.";
-	// 	// }
-	// 	// else {
-	// 		stockPriceList = Utils.cloneJSONObject(data);
-	// 	// }
-	// }
 
 	useEffect(() => {
 		//  // Fetch data immediately
