@@ -16,39 +16,48 @@ const fetcher = (symbols: string[]) => axios.get(`/api/stock-index`, {
 }).then(res => res);
 
 const useStockData = (symbols: string[]) => {
-	const {data, mutate, error, isValidating} = useSWR(symbols, fetcher, {
-		// refreshInterval: 5 * 1000, //  Fetch data every 5 seconds
-		refreshInterval: 5 * 60 * 60 * 1000, // Fetch data every 5 minutes
-		revalidateOnFocus: true,
-		revalidateOnReconnect: true,
-	});
+	console.log("============= useStockData");
+
+	const response = useSWR(symbols, fetcher, {
+			// refreshInterval: 5 * 1000, //  Fetch data every 5 seconds
+			refreshInterval: 5 * 60 * 60 * 1000, // Fetch data every 5 minutes
+			revalidateOnFocus: true,
+			revalidateOnReconnect: true,
+		});
+
+	console.log (response);
+	// const {data, mutate, error, isValidating} = useSWR(symbols, fetcher, {
+	// 	// refreshInterval: 5 * 1000, //  Fetch data every 5 seconds
+	// 	refreshInterval: 5 * 60 * 60 * 1000, // Fetch data every 5 minutes
+	// 	revalidateOnFocus: true,
+	// 	revalidateOnReconnect: true,
+	// });
 
 
-	console.log(data);
 	let stockPriceList: JSONObject[] = [];
 	let errMsg = "";
-	if( data !== undefined ) {
-		if( data.statusText !== "OK" ) {
-			errMsg = "Error while fetching stock data.";
-		}
-		else {
-			stockPriceList = Utils.cloneJSONObject(data.data);
-		}
-	}
+	// if( data !== undefined ) {
+	// 	if( data.statusText !== "OK" ) {
+	// 		errMsg = "Error while fetching stock data.";
+	// 	}
+	// 	else {
+	// 		stockPriceList = Utils.cloneJSONObject(data.data);
+	// 	}
+	// }
 	useEffect(() => {
 		//  // Fetch data immediately
 		//  mutate();
 		
 		// // Return a cleanup function to stop revalidation by calling mutate 
 		return () => {
-		  mutate(undefined, false); // Stop revalidation on unmount
+			response.mutate(undefined, false); // Stop revalidation on unmount
 		};
-	  }, [mutate]);
+	  }, [response.mutate]);
 	
 	return {
 		stockPriceList: stockPriceList,
 		errMsg: errMsg,
-		isLoading: !error && !data, isValidating,
+		isLoading: !response.error && !response.data,
 		dateTimeStamp: new Date().getTime()
 	};
 };
