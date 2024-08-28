@@ -59,8 +59,10 @@ const useNotifications  = (userId: string) => {
 		};
 	  }, [mutate]);
 	
+	const list = ( data === undefined ) ? [] : data.sort((a: JSONObject, b: JSONObject) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
+	
 	return {
-		notificationList: data,
+		notificationList: list,
 		isLoading: !error && isValidating,
 		dateTimeStamp: new Date().getTime()
 	};
