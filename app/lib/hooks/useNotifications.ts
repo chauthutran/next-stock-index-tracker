@@ -48,22 +48,6 @@ const useNotifications  = (userId: string) => {
 	if (error) {
 		console.error("Error in useStockData:", error);
 	}
-
-	// let notificationList: JSONObject[] = [];
-	// let errMsg = "";
-	// if( data !== undefined ) {
-	// 	if( data.statusText !== "OK" ) {
-	// 		errMsg = "Error while fetching notifications.";
-	// 	}
-	// 	else {
-	// 		if(data.data == null ) {
-	// 			notificationList = [];
-	// 		}
-	// 		else {
-	// 			notificationList = Utils.cloneJSONObject(data.data);
-	// 		}
-	// 	}
-	// }
 	
 	useEffect(() => {
 		//  // Fetch data immediately

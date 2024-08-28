@@ -7,6 +7,7 @@ import * as Utils from "@/lib/utils";
 import PortfolioItem from './PortfolioItem';
 import { FaArrowDown } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
+import Loading from '../layout/Loading';
 
 
 interface PortfolioListHandles {
@@ -30,22 +31,28 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 	}));
 
 	const fetchData = async () => {
-		var response = await axios.get(`/api/portfolio?userId=${user!._id}`)
-		console.log(response);
-		let errMsg = "";
-		if (response.statusText !== "OK") {
-			errMsg = "Error while fetching stock data.";
-		}
-		else {
-			if (response.data == null) {
-				setList([]);
+		try {
+			const response = await axios.get(`/api/portfolio`, {
+				params: {
+					userId: user!._id
+				}
+			});
+			
+			console.log("Response:", response);
+			
+			if (response.status !== 200) {
+				throw new Error("Error while fetching stock data.");
 			}
-			else {
+			
+			if (!response.data) {
+				setList([]);
+			} else {
 				const investments = response.data.investments;
 				const result = await transformData(investments);
-
 				setList(Utils.cloneJSONObject(result));
 			}
+		} catch (error) {
+			console.error("Fetch data error:", Utils.getErrMessage(error));
 		}
 	}
 
