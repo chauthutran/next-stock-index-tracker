@@ -38,7 +38,6 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 				}
 			});
 			
-			console.log("Response:", response);
 			
 			if (response.status !== 200) {
 				throw new Error("Error while fetching stock data.");
@@ -49,7 +48,8 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 			} else {
 				const investments = response.data.investments;
 				const result = await transformData(investments);
-				setList(Utils.cloneJSONObject(result));
+				console.log("---- PortfolioList:", result);
+				setList(result);
 			}
 		} catch (error) {
 			console.error("Fetch data error:", Utils.getErrMessage(error));
@@ -101,6 +101,9 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 	
 	const totalData = calculatePerformance(list);
 	 
+console.log("============== Portolio");
+console.log(list);
+console.log(transformData);
 
 	return (
 		<div className="flex flex-col space-y-8 text-navy-blue">
