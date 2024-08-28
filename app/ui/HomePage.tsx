@@ -44,7 +44,8 @@ export default function HomePage() {
 		setMainPage(Constant.UI_PAGE_COMPARE_STOCK_INDEXES_CHARTS);
 	};
 
-
+console.log("===== symbolList");
+console.log(symbolList);
 	return (
 		<div className='flex flex-col'>
 			
