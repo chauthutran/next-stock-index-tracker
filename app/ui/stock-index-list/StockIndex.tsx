@@ -16,7 +16,8 @@ export default function StockIndex({ stockData }: { stockData: JSONObject}) {
 				<div className="mb-2">
 					<SymbolBox data={stockData} />
 				</div>
-								{stockData.longName}</h3>
+				{stockData.longName}
+			</h3>
 			<p className={`${percent > 0 ? 'text-green-500' : 'text-red-500'}`}>
 				{Utils.formatDisplayNumber(closePrice)} {percent !== undefined && <span className="text-sm">({percent > 0 ? '+' : ''}{percent.toFixed(2)}%)</span>}</p>
 		</div>
