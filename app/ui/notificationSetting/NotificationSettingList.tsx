@@ -1,13 +1,10 @@
-// components/Notification.tsx
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
-import { FiPlus } from 'react-icons/fi';
 import { JSONObject } from '@/lib/definations';
 import * as Utils from "@/lib/utils";
 import NotificationSettingItem from './NotificationSettingItem';
 
-// Define the type for the ref object
 interface NotificationSettingListHandles {
 	handleOnUpdate: (newNotification: JSONObject[]) => void;
   }
@@ -28,19 +25,21 @@ const NotificationSettingList = forwardRef<NotificationSettingListHandles>((prop
 	}));
 
 	const fetchData = async () => {
-		var response = await axios.get(`/api/notification-settings?userId=${user!._id}`)
-console.log(response);
-		let errMsg = "";
-		if (response.statusText !== "OK") {
-			errMsg = "Error while fetching stock data.";
+		const response = await axios.get(`/api/notification-settings`, {
+			params: {
+				userId: user!._id
+			}
+		});
+
+		if (response.status !== 200) {
+			throw new Error("Error while fetching stock data.");
+		}
+		
+		if (!response.data) {
+			setList([]);
 		}
 		else {
-			if (response.data == null) {
-				setList([]);
-			}
-			else {
-				setList(Utils.cloneJSONObject(response.data.notifications));
-			}
+			setList(Utils.cloneJSONObject(response.data.notifications));
 		}
 	}
 

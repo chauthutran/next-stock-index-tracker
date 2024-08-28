@@ -48,7 +48,6 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 			} else {
 				const investments = response.data.investments;
 				const result = await transformData(investments);
-				console.log("---- PortfolioList:", result);
 				setList(result);
 			}
 		} catch (error) {
@@ -101,9 +100,6 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 	
 	const totalData = calculatePerformance(list);
 	 
-console.log("============== Portolio");
-console.log(list);
-console.log(transformData);
 
 	return (
 		<div className="flex flex-col space-y-8 text-navy-blue">
