@@ -24,6 +24,7 @@ const useStockData = (symbols: string[]) => {
 	});
 
 
+	console.log(data);
 	let stockPriceList: JSONObject[] = [];
 	let errMsg = "";
 	if( data !== undefined ) {
@@ -34,10 +35,9 @@ const useStockData = (symbols: string[]) => {
 			stockPriceList = Utils.cloneJSONObject(data.data);
 		}
 	}
-	
 	useEffect(() => {
-		 // Fetch data immediately
-		 mutate();
+		//  // Fetch data immediately
+		//  mutate();
 		
 		// // Return a cleanup function to stop revalidation by calling mutate 
 		return () => {
