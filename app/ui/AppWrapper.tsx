@@ -20,9 +20,10 @@ import UserSettingPage from './userSetting/UserSettingPage';
 export default function AppWrapper() {
 
 	const {mainPage} = useMainUi();
-
+console.log(mainPage);
 	return (
 		<div className="text-textPrimary">
+		
 			{ mainPage == Constant.UI_PAGE_HOME && <HomePage />}
 			{ mainPage == Constant.UI_SYMBOL_DETAILS && <StockIndexDetails curPriceData={AppStore.getSelectedSymbolData()} />}
 			{ mainPage == Constant.UI_PAGE_TRENDING && <StockTrending />}
