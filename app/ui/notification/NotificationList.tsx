@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { JSONObject } from '@/lib/definations';
 import * as Utils from "@/lib/utils";
 import useNotifications from '@/lib/hooks/useNotifications';
+import Loading from '../layout/Loading';
 
 // Define the type for the ref object
 interface NotificationListHandles {
@@ -13,8 +14,10 @@ interface NotificationListHandles {
 const NotificationList = forwardRef<NotificationListHandles>((props, ref) => {
 
 	const { user } = useAuth();
-	const { notificationList: list } = useNotifications(user!._id);
+	const { notificationList: list, isLoading } = useNotifications(user!._id);
  
+	if (isLoading) return <Loading />
+
 	return (
 		<div className="flex flex-col">
 			{list.map((notification: JSONObject, index: number) => (

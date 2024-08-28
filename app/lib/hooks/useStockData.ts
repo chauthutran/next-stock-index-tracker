@@ -38,7 +38,7 @@ const fetcher = async (symbols: string[]) => {
   
 
 const useStockData = (symbols: string[]) => {
-console.log();
+
 	const { data, mutate, error, isValidating } = useSWR(
 		symbols.length > 0 ? `/api/stock-index?symbols=${symbols.join(",")}` : null,
 		() => fetcher(symbols),
@@ -50,16 +50,20 @@ console.log();
 	  );
 
 
-	let stockPriceList: JSONObject[] = [];
-	let errMsg = "";
-	if( data !== undefined || data !== null ) {
-		// if( data.statusText !== "OK" ) {
-		// 	errMsg = "Error while fetching stock data.";
-		// }
-		// else {
-			stockPriceList = Utils.cloneJSONObject(data);
-		// }
-	}
+	  if (error) {
+		console.error("Error in useStockData:", error);
+	  }
+
+	// let stockPriceList: JSONObject[] = [];
+	// let errMsg = "";
+	// if( data !== undefined || data !== null ) {
+	// 	// if( data.statusText !== "OK" ) {
+	// 	// 	errMsg = "Error while fetching stock data.";
+	// 	// }
+	// 	// else {
+	// 		stockPriceList = Utils.cloneJSONObject(data);
+	// 	// }
+	// }
 
 	useEffect(() => {
 		//  // Fetch data immediately
@@ -72,8 +76,9 @@ console.log();
 	  }, [mutate]);
 	
 	return {
-		stockPriceList: stockPriceList,
-		errMsg: errMsg,
+		stockPriceList: data,
+		error,
+		// errMsg: errMsg,
 		isLoading: !error && !data,
 		dateTimeStamp: new Date().getTime()
 	};
