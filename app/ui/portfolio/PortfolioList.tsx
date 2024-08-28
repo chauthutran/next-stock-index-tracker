@@ -38,7 +38,6 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 				}
 			});
 			
-			
 			if (response.status !== 200) {
 				throw new Error("Error while fetching stock data.");
 			}

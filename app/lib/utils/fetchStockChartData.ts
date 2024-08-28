@@ -37,12 +37,20 @@ export default async function fetchChartData(symbol: string, periodName: string)
 			"interval": options.interval
 		},
 	});
-	
-	let dataList = response.data.quotes;
-	if (dataList === undefined) {
-		response.data.quotes = []
+
+	if (response.status !== 200) {
+		throw new Error("Error while fetching stock data.");
 	}
-	else if (options.isOneDay) {
+
+	if ( !response.data ) {
+		response.data = {};
+	}
+	
+	if( !response.data.quotes ) {
+		response.data.quotes = [];
+	}
+
+	if (options.isOneDay) {
 		response.data.quotes = getChartDataInLatestDate(response.data.quotes);
 	}
 

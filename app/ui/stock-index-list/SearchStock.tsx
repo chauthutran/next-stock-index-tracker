@@ -57,7 +57,6 @@ export default function SearchStock({ handleOnItemSelect }: { handleOnItemSelect
 	const handleKeyUp = (event: KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === 'Enter') {
 			event.preventDefault(); // Prevent default form submission if inside a form
-			console.log('Enter key released:', searchcKey);
 			searchStock();
 		}
 	};

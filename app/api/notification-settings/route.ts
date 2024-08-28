@@ -48,27 +48,24 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
 	try {
-		await connectToDatabase();
-
-		
+		await connectToDatabase(); // Ensure DB connection
+	
 		const { userId, notification } = await request.json();
-		const symbol = notification.symbol;
-		const notificationResponse = await NotificationSetting.findOneAndUpdate(
-			{ 
-				userId, 
-				'notifications.symbol': symbol 
-			},
+		// userId = new mongoose.Types.ObjectId(userId as string);
+
+		const addInvestment  = await NotificationSetting.findOneAndUpdate(
+			{ userId },
 			{
-                $set: {
-                    'notifications.$': {
-                        ...notification,
-                        symbol,
-                    },
-                },
+                $push: { notifications: notification },
             },
-            { new: true }
+            { new: true, upsert: true } // Create a new portfolio if not found
 		);
-		return NextResponse.json(notificationResponse, { status: 200 }); // Return the updated user document
+
+		if (!addInvestment ) {
+            throw new Error('Portfolio not found');
+        }
+
+		return NextResponse.json(addInvestment, { status: 200 }); // Return the updated user document
 		
 	} catch (error) {
 		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });

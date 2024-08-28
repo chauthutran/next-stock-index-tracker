@@ -21,7 +21,6 @@ const NotificationSettingAddForm: React.FC<NotificationSettingAddFormProps> = ({
 
 	const { user } = useAuth();
 	const [stockSymbol, setStockSymbol] = useState(existingNotification?.symbol || '');
-	// const [longName, setLongName] = useState(existingNotification?.longName || '');
 	const [threshold, setThreshold] = useState(existingNotification?.threshold || 0);
 	const [direction, setDirection] = useState(existingNotification?.direction || 'above');
 
@@ -34,7 +33,7 @@ const NotificationSettingAddForm: React.FC<NotificationSettingAddFormProps> = ({
 			return;
 		}
 		try {
-			const response = await axios.post('/api/notification-settings', {
+			const response = await axios.put('/api/notification-settings', {
 				userId: user!._id,
 				notification: { symbol: stockSymbol, threshold, direction },
 			});
@@ -56,7 +55,6 @@ const NotificationSettingAddForm: React.FC<NotificationSettingAddFormProps> = ({
 	useEffect(() => {
 		if (existingNotification) {
 			setStockSymbol(existingNotification.symbol);
-			// setLongName(existingNotification.longName);
 			setThreshold(existingNotification.threshold);
 			setDirection(existingNotification.direction || 'above');
 		}
@@ -72,7 +70,6 @@ const NotificationSettingAddForm: React.FC<NotificationSettingAddFormProps> = ({
                 <IoClose className="cursor-pointer" size={28} onClick={() => handleOnClose()} />
             </h2>
 
-			{/* <form onSubmit={handleSubmit} className="space-y-4"> */}
 			<div className="grid grid-cols-[auto,1fr] gap-2 p-3 items-center">
 			
 				<div>Stock Symbol <span className="text-red-500">*</span></div>
@@ -104,7 +101,7 @@ const NotificationSettingAddForm: React.FC<NotificationSettingAddFormProps> = ({
 
 				<div></div>
 				<div className="flex">
-					<button className="bg-pastel-blue p-3 rounded-lg m-3 w-full" onClick={(e) => handleSaveBtnClick(e)}>{existingNotification ? 'Update Investment' : 'Add Investment'}</button>
+					<button className="bg-pastel-blue p-3 rounded-lg m-3 w-full" onClick={(e) => handleSaveBtnClick(e)}>{existingNotification ? 'Update' : 'Add'}</button>
 					<button className="bg-silver p-3 rounded-lg m-3 w-full" onClick={() => handleOnClose()}>Cancel</button>
 				</div>
 			</div>
