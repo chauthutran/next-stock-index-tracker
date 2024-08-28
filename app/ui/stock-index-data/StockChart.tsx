@@ -60,15 +60,15 @@ export default function StockChart({ symbol }: { symbol: string }) {
 
 	const fetchData = async() => {
 		const data = await fetchStockChartData(symbol, dateRangeName);
-
-		if( data !== undefined ) {
-			if( data.statusText === "OK" ) { 
-				setChartData(data.data.quotes);
-			}
-			else {
-				// errMsg = "Error while fetching stock data.";
-			}
-		}
+		console.log("------------- Chart data");
+console.log(data);
+		// if( data !== undefined ) {
+				setChartData(data.quotes);
+			// }
+			// else {
+			// 	// errMsg = "Error while fetching stock data.";
+			// }
+		// }
 	
 	}
 

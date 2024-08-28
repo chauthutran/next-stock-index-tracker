@@ -54,7 +54,7 @@ export default async function fetchChartData(symbol: string, periodName: string)
 		response.data.quotes = getChartDataInLatestDate(response.data.quotes);
 	}
 
-	return response;
+	return response.data;
 }
 
 
