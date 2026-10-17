@@ -1,90 +1,63 @@
-
-import connectToDatabase from "@/lib/db"; // Have to have this import so that we can connect database
-import { JSONObject } from "@/lib/definations";
-import Notification from "@/lib/schemas/NotificationSchema";
-import User from '@/lib/schemas/User.schema';
-import * as Utils from "@/lib/utils";
+import {
+	deleteNotification,
+	getNotifications,
+	markNotificationAsRead,
+	saveNotifications,
+} from "@/services/notificationsService";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(request: NextRequest) {
-	await connectToDatabase(); // Ensure DB connection
-
-	const { searchParams } = new URL(request.url);
-	
-	const userId = searchParams.get("userId");
-	const notification = await Notification.find({ userId });
-
-	return NextResponse.json(notification, { status: 200 });
+	const userId = new URL(request.url).searchParams.get("userId");
+	try {
+		return NextResponse.json(await getNotifications(userId), { status: 200 });
+	} catch (error) {
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 500 });
+	}
 }
 
-// Update "Notifications" list
 export async function POST(request: NextRequest) {
 	try {
-		await connectToDatabase(); // Ensure DB connection
-
-		const {userId, notifications} = await request.json();
-		const notificationResponse = await Notification.findOneAndUpdate(
-			{ 
-				_id: userId
-			},
-			{
-                $set: {
-                    'notifications': notifications
-                },
-            },
-            { new: true }
+		const { userId, notifications } = await request.json();
+		return NextResponse.json(
+			await saveNotifications(userId, notifications),
+			{ status: 200 },
 		);
-		return NextResponse.json(notificationResponse, { status: 200 }); // Return the updated user document
-		
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 400 });
 	}
 }
 
 export async function PUT(request: NextRequest) {
 	try {
-		await connectToDatabase(); // Ensure DB connection
-
 		const notification = await request.json();
-		const notificationResponse = await Notification.findOneAndUpdate(
-			{ 
-				_id: notification._id
-			},
-			{
-                $set: {
-                    'notifications.$': {
-                        ...notification,
-                        newMessage : false
-                    },
-                },
-            },
-            { new: true }
+		if (typeof notification?._id !== "string") {
+			return NextResponse.json(
+				{ error: "A notification ID is required." },
+				{ status: 400 },
+			);
+		}
+		return NextResponse.json(
+			await markNotificationAsRead(notification),
+			{ status: 200 },
 		);
-		return NextResponse.json(notificationResponse, { status: 200 }); // Return the updated user document
-		
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 404 });
 	}
 }
 
-
 export async function DELETE(request: NextRequest) {
+	const id = new URL(request.url).searchParams.get("_id");
 	try {
-		await connectToDatabase(); // Ensure DB connection
-		
-		const { searchParams } = new URL(request.url);
-		const _id = searchParams.get("_id");
-
-		const updatednotification  = await Notification.findOneAndDelete( { _id} );
-		
-        if (!updatednotification) {
-            throw new Error(`The notification '${_id}' is not found`);
-        }
-
-		return NextResponse.json(updatednotification , { status: 200 }); // Return the updated user document
-		
+		return NextResponse.json(await deleteNotification(id), { status: 200 });
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 404 });
 	}
 }

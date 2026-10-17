@@ -2,12 +2,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { JSONObject } from "@/lib/definations";
 import * as Utils from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { FaArrowDown } from "react-icons/fa";
-import { FaArrowUp } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
-import * as AppStore from "@/lib/AppStore";
-import * as Constant from "@/lib/constant";
-import { useMainUi } from "@/contexts/MainUiContext";
 import { fetchIndividualData } from "@/lib/utils/fetchStockIndexes";
 import Loading from "../layout/Loading";
 import StockListItem from "../layout/StockListItem";
@@ -20,8 +14,15 @@ export default function WatchListItemList({ groupName }: { groupName: string }) 
 	const [stocks, setStocks] = useState<JSONObject[] | null>(null);
 
 	const showWatchlistByGroup = async (groupName: string) => {
-		const groupItem = Utils.findFromArray(user!.watchlist, groupName, "groupName");
-		const symbols = groupItem!.stocks.map((item: JSONObject) => item.symbol);
+		const groupItem = user?.watchlist?.find(
+			(item) => item.groupName === groupName,
+		);
+		const symbols = groupItem?.stocks.map((item) => item.symbol) ?? [];
+		if (symbols.length === 0) {
+			setStocks([]);
+			return;
+		}
+
 		const response = await fetchIndividualData(symbols.join(","));
 
 		if (response.status == "success") {
@@ -67,6 +68,10 @@ export default function WatchListItemList({ groupName }: { groupName: string }) 
 
 	return (
 		<>
+		{stocks.length === 0 && (
+			<p className="m-3 text-gray-600">No stocks in this watchlist yet.</p>
+		)}
+		{stocks.length > 0 && <>
 		<div className="m-3">
 			<div className="hidden lg:block">
 				<table className="min-w-full divide-y divide-gray-200">
@@ -107,6 +112,7 @@ export default function WatchListItemList({ groupName }: { groupName: string }) 
 			))}
 			</div>
 		</div>
+		</>}
 {/* 
 
 

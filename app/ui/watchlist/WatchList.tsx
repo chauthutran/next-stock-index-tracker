@@ -19,7 +19,7 @@ export default function WatchList() {
 	return (
 		<div className="flex flex-col w-full mr-2">
 			<div className="flex flex-row space-x-2 m-2 font-medium">
-				{user!.watchlist.map((item: JSONObject, idx: number) => (
+				{(user!.watchlist || []).map((item: JSONObject, idx: number) => (
 					<div 
 						key={`watchlist_${idx}`}
 						className={`px-3 py-1 hover:bg-yellow-600 rounded-md bg-gold text-navy-blue ${selected !== null && selected.groupName == item.groupName ? "bg-gold" : "bg-gray-200 text-gray-500"}`}

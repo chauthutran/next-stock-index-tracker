@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "66ae06482eebbd326c2a6392",
+    "userId": "66cf37f57c79f55e020ad2b3",
+    "investments": [
+      {
+        "symbol": "AAPL",
+        "quantity": "100",
+        "purchasePrice": "300",
+        "_id": "66ae0f709efc4623f5b0b4b3"
+      },
+      {
+        "symbol": "GOOG",
+        "quantity": "100",
+        "purchasePrice": "12",
+        "_id": "66cf15be0de827d72f059fcc"
+      }
+    ]
+  }
+]

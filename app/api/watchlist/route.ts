@@ -1,72 +1,69 @@
-
-import connectToDatabase from "@/lib/db"; // Have to have this import so that we can connect database
-import { JSONObject } from "@/lib/definations";
-import User from '@/lib/schemas/User.schema';
-import * as Utils from "@/lib/utils";
+import {
+	updateWatchlist,
+	WatchlistServiceError,
+} from "@/services/watchlistService";
+import { TWatchlistStock } from "../../../types/models";
 import { NextRequest, NextResponse } from "next/server";
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+	typeof value === "object" && value !== null;
 
 export async function POST(request: NextRequest) {
-	await connectToDatabase(); // Ensure DB connection
-	
-	// payload : {action: "add/remove", userId: "xxx", groupName: "", stock: stockData}
-	const payload: JSONObject = await request.json();
-	const { action, userId, groupName, stock } = payload;
-
 	try {
-		// Check if the user exists
-		const user = await User.findById(userId);
-		if (!user) {
-			throw new Error('User not found.');
+		const payload: unknown = await request.json();
+		if (!isRecord(payload) || !isRecord(payload.stock)) {
+			return NextResponse.json(
+				{ error: "A valid watchlist request is required." },
+				{ status: 400 },
+			);
 		}
 
-		// Check if the group already exists in the watchlist
-		const groupExists = user.watchlist.some((group: any) => group.groupName === groupName);
-
-		let updatedUser;
-		if (groupExists) {
-			// If the group exists, update the stocks array
-			if( action === "add" ) {
-				updatedUser = await User.findOneAndUpdate(
-					{ _id: userId, "watchlist.groupName": groupName },
-					{ $push: { "watchlist.$.stocks": stock } },
-					{ new: true, useFindAndModify: false }
-				).exec();
-			}
-			else if( action === "remove" ) {
-				updatedUser = await User.findOneAndUpdate(
-					{ _id: userId, "watchlist.groupName": groupName },
-					{ $pull: { "watchlist.$.stocks": { symbol: stock.symbol } } },
-					{ new: true, useFindAndModify: false }
-				).exec();
-			}
-
-			if (!updatedUser) {
-				throw new Error('Failed to add watchlist.');
-			}
-
-			console.log('Watchlist updated successfully.');
-			return NextResponse.json(updatedUser, { status: 200 });
-
-		} else { // Ass new
-			// If the group does not exist, create a new group and add the stock
-			updatedUser = await User.findOneAndUpdate(
-				{ _id: userId },
-				{ $addToSet: { watchlist: { groupName: groupName, stocks: [stock] } } },
-				{ new: true, useFindAndModify: false }
-			).exec();
-
-			if (!updatedUser) {
-				throw new Error('Failed to update watchlist.');
-			}
+		const { action, userId, groupName } = payload;
+		const stockData = payload.stock;
+		if (
+			(action !== "add" && action !== "remove") ||
+			typeof userId !== "string" ||
+			!userId.trim() ||
+			typeof groupName !== "string" ||
+			!groupName.trim() ||
+			typeof stockData.symbol !== "string" ||
+			!stockData.symbol.trim()
+		) {
+			return NextResponse.json(
+				{ error: "Action, userId, groupName, and stock symbol are required." },
+				{ status: 400 },
+			);
 		}
 
-		console.log('Watchlist updated successfully.');
-		return NextResponse.json(updatedUser, { status: 200 }); // Return the updated user document
-		
+		const stock: TWatchlistStock = {
+			symbol: stockData.symbol.trim(),
+			name: typeof stockData.name === "string" ? stockData.name : "",
+			addedAt:
+				typeof stockData.addedAt === "string"
+					? stockData.addedAt
+					: new Date().toISOString(),
+		};
+		const updatedUser = await updateWatchlist({
+			action,
+			userId,
+			groupName: groupName.trim(),
+			stock,
+		});
+
+		return NextResponse.json(updatedUser, { status: 200 });
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		if (error instanceof WatchlistServiceError) {
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: error.status },
+			);
+		}
+
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json(
+			{ error: `Failed to update watchlist: ${message}` },
+			{ status: 500 },
+		);
 	}
-
 }
-

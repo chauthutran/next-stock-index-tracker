@@ -14,7 +14,7 @@ interface NotificationListHandles {
 const NotificationList = forwardRef<NotificationListHandles>((props, ref) => {
 
 	const { user } = useAuth();
-	const { notificationList: list, isLoading } = useNotifications(user!._id);
+	const { notificationList: list, isLoading } = useNotifications(user!._id!);
  
 	if (isLoading) return <Loading />
 

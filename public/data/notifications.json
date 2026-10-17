@@ -1,0 +1,23 @@
+[
+  {
+    "_id": "66cf395599fb6a3101e6b6fb",
+    "userId": "66cf37f57c79f55e020ad2b3",
+    "notificationSettingId": "66b9b913229059620aaf9d70",
+    "message": "The stock \"AA\" is now 32.28, above 20 at Aug 28, 2024 23:51",
+    "createdDate": "2024-08-28T14:51:01.826Z"
+  },
+  {
+    "_id": "66cf395899fb6a3101e6b6fc",
+    "userId": "66cf37f57c79f55e020ad2b3",
+    "notificationSettingId": "66b9b913229059620aaf9d70",
+    "message": "The stock \"GOOG\" is now 164.215, above 10 at Aug 28, 2024 23:51",
+    "createdDate": "2024-08-28T14:51:04.467Z"
+  },
+  {
+    "_id": "66cfcae131518c7dc24bf58d",
+    "userId": "66cfc99466915466007dbde1",
+    "notificationSettingId": "66b9b913229059620aaf9d70",
+    "message": "The stock \"BB\" is now 2.32, above 2 at Aug 29, 2024 10:12",
+    "createdDate": "2024-08-29T01:12:01.821Z"
+  }
+]

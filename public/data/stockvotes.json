@@ -1,0 +1,19 @@
+[
+    {
+        "_id": "66c4496e229059620a9fa560",
+        "createdAt": "2024-08-20T07:44:46.633Z",
+        "updatedAt": "2024-08-20T07:44:46.633Z",
+        "votes": {
+            "downvotes": {
+                "count": "0",
+                "userIds": []
+            },
+            "upvotes": {
+                "count": "1",
+                "userIds": [
+                    "66a62b6e97d97a5b743e7b8b"
+                ]
+            }
+        }
+    }
+]

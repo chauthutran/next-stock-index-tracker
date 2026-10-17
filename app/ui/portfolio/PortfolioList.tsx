@@ -77,6 +77,7 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 
 	const transformData = async(investments: JSONObject[]): Promise<JSONObject[]> => {
 		let result: JSONObject[] = [];
+		
 		const symbols = investments.map((item: JSONObject) => item.symbol);
 		const currentPricesResponse = await axios.get(`/api/stock-index`, {
 			params: {
@@ -126,7 +127,7 @@ const PortfolioList = forwardRef<PortfolioListHandles>((props, ref) => {
 			</div>
 
 			<div className="w-full overflow-x-auto hidden md:block"> {/* Container for handling horizontal scroll */}
-				<table className="min-w-full bg-white"> {/* Ensure table takes up at least the full width */}
+				<table className="min-w-full bg-white">
 					<thead>
 						<tr>
 							<th className="py-2 px-4 border-b text-start">Symbol</th>

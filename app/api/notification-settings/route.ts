@@ -1,99 +1,80 @@
- // Have to have this import so that we can connect database
-import connectToDatabase from "@/lib/db";
-import { JSONObject } from "@/lib/definations";
-import NotificationSetting from '@/lib/schemas/NotificationSettingSchema';
-import User from '@/lib/schemas/User.schema';
-import * as Utils from "@/lib/utils";
+import {
+	addNotificationSetting,
+	getNotificationSettings,
+	removeNotificationSetting,
+	saveNotificationSettings,
+} from "@/services/notificationSettingsService";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(request: NextRequest) {
-	await connectToDatabase();
-
-	const { searchParams } = new URL(request.url);
-	
-	const userId = searchParams.get("userId");
-	const notification = await NotificationSetting.findOne({ userId });
-
-	return NextResponse.json(notification, { status: 200 });
+	const userId = new URL(request.url).searchParams.get("userId");
+	try {
+		return NextResponse.json(await getNotificationSettings(userId), {
+			status: 200,
+		});
+	} catch (error) {
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 500 });
+	}
 }
 
 export async function POST(request: NextRequest) {
 	try {
-		await connectToDatabase();
-
 		const { userId, notifications } = await request.json();
-
-		const addNotification  = await NotificationSetting.findOneAndUpdate(
-			{ userId },
-			{
-                $set: {
-                    'notifications': notifications
-                },
-            },
-            { new: true, upsert: true } // Create a new notification if not found
+		if (typeof userId !== "string" || !Array.isArray(notifications)) {
+			return NextResponse.json(
+				{ error: "A user ID and notification list are required." },
+				{ status: 400 },
+			);
+		}
+		return NextResponse.json(
+			await saveNotificationSettings(userId, notifications),
+			{ status: 200 },
 		);
-
-		if (!addNotification ) {
-            throw new Error('Notification not found');
-        }
-
-		return NextResponse.json(addNotification, { status: 200 }); // Return the updated user document
-		
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }
-
 
 export async function PUT(request: NextRequest) {
 	try {
-		await connectToDatabase(); // Ensure DB connection
-	
 		const { userId, notification } = await request.json();
-		// userId = new mongoose.Types.ObjectId(userId as string);
-
-		const addInvestment  = await NotificationSetting.findOneAndUpdate(
-			{ userId },
-			{
-                $push: { notifications: notification },
-            },
-            { new: true, upsert: true } // Create a new portfolio if not found
+		if (
+			typeof userId !== "string" ||
+			typeof notification?.symbol !== "string"
+		) {
+			return NextResponse.json(
+				{ error: "A user ID and notification are required." },
+				{ status: 400 },
+			);
+		}
+		return NextResponse.json(
+			await addNotificationSetting(userId, notification),
+			{ status: 200 },
 		);
-
-		if (!addInvestment ) {
-            throw new Error('Portfolio not found');
-        }
-
-		return NextResponse.json(addInvestment, { status: 200 }); // Return the updated user document
-		
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }
 
-
 export async function DELETE(request: NextRequest) {
+	const { searchParams } = new URL(request.url);
 	try {
-		const { searchParams } = new URL(request.url);
-		const userId = searchParams.get("userId");
-		const symbol = searchParams.get("symbol");
-
-		const updatednotification  = await NotificationSetting.findOneAndUpdate(
-			{ userId, 'notifications.symbol': symbol },
-			{
-                $pull: { notifications: { symbol } },
-            },
-            { new: true }
+		return NextResponse.json(
+			await removeNotificationSetting(
+				searchParams.get("userId"),
+				searchParams.get("symbol"),
+			),
+			{ status: 200 },
 		);
-		
-        if (!updatednotification) {
-            throw new Error('notifications not found');
-        }
-
-		return NextResponse.json(updatednotification , { status: 200 }); // Return the updated user document
-		
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 404 });
 	}
 }

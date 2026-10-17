@@ -38,7 +38,7 @@ export default function AddWatchListForm({ handleOnClose }: { handleOnClose: () 
         }
     };
 
-    const groupNameList = user!.watchlist.map((item: JSONObject) => item.groupName);
+    const groupNameList = (user!.watchlist || []).map((item: JSONObject) => item.groupName);
 
     return (
         <div className="flex flex-col space-y-3 bg-white rounded-lg pb-5 w-2/3 h-fit">

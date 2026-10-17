@@ -1,0 +1,25 @@
+[
+  {
+    "_id": "66cf37f57c79f55e020ad2b3",
+    "email": "test1@gmail.com",
+    "password": "$2a$10$D.8SpYHYbYHPF46sZvCaWukx.L3ikk2V88wEfoShm5gazwLUj4bnG",
+    "allowToShareSettings": false,
+    "watchlist": [
+      {
+        "groupName": "watch group 1",
+        "stocks": []
+      }
+    ],
+    "createdAt": "2024-08-28T14:45:09.768Z",
+    "updatedAt": "2026-10-17T12:02:42.521Z"
+  },
+  {
+    "_id": "66cfc99466915466007dbde1",
+    "email": "test2@gmail.com",
+    "password": "$2a$10$D.8SpYHYbYHPF46sZvCaWukx.L3ikk2V88wEfoShm5gazwLUj4bnG",
+    "allowToShareSettings": false,
+    "watchlist": [],
+    "createdAt": "2024-08-28T14:45:09.768Z",
+    "updatedAt": "2024-08-28T14:45:09.768Z"
+  }
+]

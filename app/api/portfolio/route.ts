@@ -1,100 +1,79 @@
-
-import connectToDatabase from "@/lib/db"; // Have to have this import so that we can connect database
-import { JSONObject } from "@/lib/definations";
-import Portfolio from "@/lib/schemas/PortfolioSchema";
-import User from '@/lib/schemas/User.schema';
-import * as Utils from "@/lib/utils";
+import {
+	addInvestment,
+	getPortfolio,
+	removeInvestment,
+	updateInvestment,
+} from "@/services/portfolioService";
 import { NextRequest, NextResponse } from "next/server";
 
-
 export async function GET(request: NextRequest) {
-	await connectToDatabase(); // Ensure DB connection
-
-	const { searchParams } = new URL(request.url);
-	
-	const userId = searchParams.get("userId");
-	const portfolio = await Portfolio.findOne({ userId });
-
-	return NextResponse.json(portfolio, { status: 200 });
+	const userId = new URL(request.url).searchParams.get("userId");
+	try {
+		return NextResponse.json(await getPortfolio(userId), { status: 200 });
+	} catch (error) {
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 500 });
+	}
 }
 
 export async function POST(request: NextRequest) {
 	try {
-		await connectToDatabase(); // Ensure DB connection
-	
 		const { userId, investment } = await request.json();
-		// userId = new mongoose.Types.ObjectId(userId as string);
-
-		const addInvestment  = await Portfolio.findOneAndUpdate(
-			{ userId },
-			{
-                $push: { investments: investment },
-            },
-            { new: true, upsert: true } // Create a new portfolio if not found
+		if (typeof userId !== "string" || typeof investment?.symbol !== "string") {
+			return NextResponse.json(
+				{ error: "A user ID and investment symbol are required." },
+				{ status: 400 },
+			);
+		}
+		return NextResponse.json(
+			await addInvestment(userId, investment),
+			{ status: 200 },
 		);
-
-		if (!addInvestment ) {
-            throw new Error('Portfolio not found');
-        }
-
-		return NextResponse.json(addInvestment, { status: 200 }); // Return the updated user document
-		
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 400 });
 	}
 }
-
 
 export async function PUT(request: NextRequest) {
 	try {
-		await connectToDatabase(); // Ensure DB connection
-		
 		const { userId, investment } = await request.json();
-
-		const symbol = investment.symbol;
-		const portfolio = await Portfolio.findOneAndUpdate(
-			{ userId, 'investments.symbol': symbol },
-			{
-                $set: {
-                    'investments.$': {
-                        ...investment,
-                        symbol,
-                    },
-                },
-            },
-            { new: true }
-		);
-		return NextResponse.json(portfolio, { status: 200 }); // Return the updated user document
-		
+		if (typeof userId !== "string" || typeof investment?.symbol !== "string") {
+			return NextResponse.json(
+				{ error: "A user ID and investment symbol are required." },
+				{ status: 400 },
+			);
+		}
+		const portfolio = await updateInvestment(userId, investment);
+		if (!portfolio) {
+			return NextResponse.json(
+				{ error: "Investment not found." },
+				{ status: 404 },
+			);
+		}
+		return NextResponse.json(portfolio, { status: 200 });
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 400 });
 	}
 }
 
-
 export async function DELETE(request: NextRequest) {
+	const { searchParams } = new URL(request.url);
 	try {
-		await connectToDatabase(); // Ensure DB connection
-		
-		const { searchParams } = new URL(request.url);
-		const userId = searchParams.get("userId");
-		const symbol = searchParams.get("symbol");
-
-		const updatedPortfolio  = await Portfolio.findOneAndUpdate(
-			{ userId, 'investments.symbol': symbol },
-			{
-                $pull: { investments: { symbol } },
-            },
-            { new: true }
+		return NextResponse.json(
+			await removeInvestment(
+				searchParams.get("userId"),
+				searchParams.get("symbol"),
+			),
+			{ status: 200 },
 		);
-		
-        if (!updatedPortfolio) {
-            throw new Error('Investment not found');
-        }
-
-		return NextResponse.json(updatedPortfolio , { status: 200 }); // Return the updated user document
-		
 	} catch (error) {
-		return NextResponse.json({ msg: Utils.getErrMessage(error) }, { status: 404 });
+		const message =
+			error instanceof Error ? error.message : "Unknown error occurred.";
+		return NextResponse.json({ error: message }, { status: 404 });
 	}
 }

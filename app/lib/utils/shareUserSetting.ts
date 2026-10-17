@@ -2,6 +2,7 @@ import { JSONObject } from '@/lib/definations';
 import axios from "axios";
 import NotificationSetting from "../schemas/NotificationSettingSchema";
 import * as Utils from "@/lib/utils";
+import { TUser } from '../../../types/models';
 
 /**
  * Shares notification settings from one user to another.
@@ -34,7 +35,7 @@ export const shareNotificationSettings = async( fromUserId: string, toUserId: st
 }
 
 
-export const updateAllowToShareSetting = async(userId: string, allowToShare: boolean): Promise<JSONObject> => {
+export const updateAllowToShareSetting = async(userId: string, allowToShare: boolean): Promise<TUser | null> => {
     try {
         const response = await axios.post('/api/auth', {
             userId: userId,
@@ -46,7 +47,7 @@ export const updateAllowToShareSetting = async(userId: string, allowToShare: boo
     }
     catch( err) {
         console.log( "Error while fetching stock data. Error: " + Utils.getErrMessage(err) );
-        return [];
+        return null;
     }
 }
 

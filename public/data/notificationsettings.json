@@ -1,0 +1,45 @@
+[
+  {
+    "_id": "66b9b913229059620aaf9d70",
+    "userId": "66cfc99466915466007dbde1",
+    "notifications": [
+      {
+        "symbol": "AA",
+        "threshold": "10",
+        "direction": "above",
+        "hasNewNotification": true
+      },
+      {
+        "symbol": "BB",
+        "threshold": "2",
+        "direction": "above",
+        "hasNewNotification": true
+      },
+      {
+        "symbol": "GOOG",
+        "threshold": "10",
+        "direction": "above",
+        "hasNewNotification": true
+      }
+    ]
+  },
+  {
+    "_id": "66c6fcb6229059620abcbf7f",
+    "userId": "66cf37f57c79f55e020ad2b3",
+    "notifications": [
+      {
+        "symbol": "AA",
+        "threshold": "10",
+        "direction": "above",
+        "hasNewNotification": true
+      },
+      {
+        "symbol": "BB",
+        "threshold": "11",
+        "direction": "above",
+        "hasNewNotification": false,
+        "_id": "66c6fe427aa7fc2d1458c088"
+      }
+    ]
+  }
+]

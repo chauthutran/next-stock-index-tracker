@@ -69,7 +69,7 @@ export default function SearchStock({ handleOnItemSelect }: { handleOnItemSelect
 					className="pl-10 peer block w-full rounded-md border border-gray-300 py-[15px] text-sm outline-2 placeholder:text-gray-500 "
 					id="search"
 					value={searchcKey}
-					placeholder="Search for stock"
+					placeholder="Search for stock, e.g AAPL"
 					required
 					onChange={(e) => setSearchKey(e.target.value)}
 					onKeyUp={handleKeyUp} // Attach the event handler
